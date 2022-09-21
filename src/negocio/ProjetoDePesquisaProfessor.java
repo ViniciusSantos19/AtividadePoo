@@ -9,7 +9,7 @@ public class ProjetoDePesquisaProfessor extends ProjetoDePesquisa{
 
 	@Override
 	public double getValorPago() {
-		double salario = 220 + (this.getPessoa().getSalario() * 0.3);
+		double salario = 220 + (220 + (this.getPessoa().getSalario() * 0.3));
 		this.getPessoa().setSalario(salario);
 		return salario;
 	}

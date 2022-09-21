@@ -9,7 +9,7 @@ public class ProjetoDePesquisaCordenador extends ProjetoDePesquisa{
 
 	@Override
 	public double getValorPago() {
-		double salario = 300 - (this.getPessoa().getCordenados().size() * 0.025 );
+		double salario = 300 -(300 *  (this.getPessoa().getCordenados().size() * 0.025 ));
 		this.getPessoa().setSalario(salario);
 		return salario;
 	}
