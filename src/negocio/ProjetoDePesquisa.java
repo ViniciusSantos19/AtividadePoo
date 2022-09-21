@@ -2,18 +2,28 @@ package negocio;
 
 public abstract class ProjetoDePesquisa {
 	
-	public ProjetoDePesquisa(){
-		
+	private Pesquisador pessoa;
+	
+	public ProjetoDePesquisa(Pesquisador pessoa){
+		this.pessoa = pessoa;
 	}
 	
-	public void inserirPesquisadores(Pesquisador orientador, Pesquisador orientado){
-		orientado.getCordenados().add(orientado);
+	public void inserirPesquisadores(Pesquisador orientado){
+		pessoa.getCordenados().add(orientado);
 	}
 	
-	public int quantidadeOrientados(Pesquisador pessoa) {
-		return pessoa.getCordenados().size();
+	public int quantidadeOrientados() {
+		return this.pessoa.getCordenados().size();
 	}
 	
-	public abstract double getValorPago(Pesquisador pessoa);
+	public abstract double getValorPago();
+
+	public Pesquisador getPessoa() {
+		return pessoa;
+	}
+
+	public void setPessoa(Pesquisador pessoa) {
+		this.pessoa = pessoa;
+	}
 	
 }
