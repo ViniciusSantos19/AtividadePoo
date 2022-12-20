@@ -129,7 +129,7 @@ public class Princi {
 			public void actionPerformed(ActionEvent e) {
 				if(e.getSource() == btnSelect) {
 					try {
-						File file = new File("/home/viniciusr/Estudos/Estudos_Java/Crud2/src/ui/Resumo.txt");
+						File file = new File("/home/viniciusr/git/AtividadePoo/Crud2/src/ui/Notas.txt");
 						FileWriter fw = new FileWriter(file);
 						PrintWriter pw = new PrintWriter(fw);
 						try {

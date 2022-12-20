@@ -90,6 +90,18 @@ public class DAOpostgres implements DAOaluno{
 		return 1;
 	}
 	
+	public static void main(String[] args) {
+			DAOpostgres test = new DAOpostgres();
+			try {
+				List <Aluno> lista = test.resumoAlunos();
+				for(int i = 0; i < lista.size(); i++) {
+					System.out.println(lista.get(i).getNome());
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+	}
 	
-
 }
