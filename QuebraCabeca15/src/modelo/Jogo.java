@@ -26,6 +26,12 @@ public class Jogo {
 		}
 		return true;
 	}
+	
+	public void reiniciaJogo() {
+		this.getArrayValido();
+		this.iniciaTabuleiro();
+		this.pontos = 0;
+	}
 
 	private  boolean ehValido() {
 		int qntdReversoe = 0;
