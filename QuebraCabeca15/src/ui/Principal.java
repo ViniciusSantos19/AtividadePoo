@@ -169,24 +169,7 @@ public class Principal {
    }
   }
   
-  final JButton btnPausar = new JButton("Pausar");
-  btnPausar.addActionListener(new ActionListener() {
-  	public void actionPerformed(ActionEvent e) {
-  		if(e.getSource() == btnPausar) {
-  			for(int i = 0; i < tam; i++) {
-  				for(int j = 0;  j < tam; j++) {
-  					if(tabuleiro[i][j].isEnabled() == true) {
-  						tabuleiro[i][j].setEnabled(false);
-  					}else {
-  						tabuleiro[i][j].setEnabled(true);
-  					}
-  				}
-  			}
-  		}
-  	}
-  });
-  btnPausar.setBounds(29, 66, 101, 25);
-  painelPauseReset.add(btnPausar);
+  
   
   final JButton btnPauseReset = new JButton("Reiniciar");
   btnPauseReset.addActionListener(new ActionListener() {
@@ -212,6 +195,28 @@ public class Principal {
   });
   btnPauseReset.setBounds(29, 12, 101, 25);
   painelPauseReset.add(btnPauseReset);
+  
+  final JButton btnPausar = new JButton("Pausar");
+  btnPausar.addActionListener(new ActionListener() {
+  	public void actionPerformed(ActionEvent e) {
+  		if(e.getSource() == btnPausar) {
+  			for(int i = 0; i < tam; i++) {
+  				for(int j = 0;  j < tam; j++) {
+  					if(tabuleiro[i][j].isEnabled() == true) {
+  						tabuleiro[i][j].setEnabled(false);
+  						btnPauseReset.setEnabled(false);
+  						
+  					}else {
+  						tabuleiro[i][j].setEnabled(true);
+  						btnPauseReset.setEnabled(true);
+  					}
+  				}
+  			}
+  		}
+  	}
+  });
+  btnPausar.setBounds(29, 66, 101, 25);
+  painelPauseReset.add(btnPausar);
   
  }
  
