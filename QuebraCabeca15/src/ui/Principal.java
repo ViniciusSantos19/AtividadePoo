@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -148,14 +150,41 @@ public class Principal {
   
   for(int i = 0; i < tam; i++) {
    for(int j = 0; j < tam; j++) {
-    tabuleiro[i][j] = new JButton();
+	tabuleiro[i][j] = new JButton();
     tabuleiro[i][j].setSize(50,50);
+    int num = jogo.tabuleiro[i][j];
+    if(num != -1) {
+    	String numImg = "Numeros/"+num+".png";
+    	imgs[i][j] = new JLabel(new ImageIcon(numImg),JLabel.CENTER);
+    }else if(num == -1) {
+    	imgs[i][j] = new JLabel(new ImageIcon("Numeros/branco.png"),JLabel.CENTER);
+    }
+    tabuleiro[i][j].setBorder(BorderFactory.createLineBorder(Color.black,2));
+    tabuleiro[i][j].add(imgs[i][j]);
+    
     tabuleiro[i][j].setText(String.valueOf(jogo.tabuleiro[i][j]));
+    tabuleiro[i][j].setForeground(Color.WHITE);
+    tabuleiro[i][j].setBackground(Color.WHITE);
     painelJogo.add(tabuleiro[i][j]);
    }
   }
   
-  JButton btnPausar = new JButton("Pausar");
+  final JButton btnPausar = new JButton("Pausar");
+  btnPausar.addActionListener(new ActionListener() {
+  	public void actionPerformed(ActionEvent e) {
+  		if(e.getSource() == btnPausar) {
+  			for(int i = 0; i < tam; i++) {
+  				for(int j = 0;  j < tam; j++) {
+  					if(tabuleiro[i][j].isEnabled() == true) {
+  						tabuleiro[i][j].setEnabled(false);
+  					}else {
+  						tabuleiro[i][j].setEnabled(true);
+  					}
+  				}
+  			}
+  		}
+  	}
+  });
   btnPausar.setBounds(29, 66, 101, 25);
   painelPauseReset.add(btnPausar);
   
@@ -166,7 +195,16 @@ public class Principal {
   			jogo.reiniciaJogo();
   			for(int i = 0; i < tam; i++) {
   			   for(int j = 0; j < tam; j++) {
-  			    tabuleiro[i][j].setText(String.valueOf(jogo.tabuleiro[i][j]));
+  				int  num = jogo.tabuleiro[i][j];
+  				tabuleiro[i][j].remove(imgs[i][j]);
+  				 if(jogo.tabuleiro[i][j] == num && jogo.tabuleiro[i][j] != -1) {
+  					String numImg = "Numeros/"+num+".png";
+  			    	imgs[i][j] = new JLabel(new ImageIcon(numImg),JLabel.CENTER);
+  				 }else {
+  					 imgs[i][j] = new JLabel(new ImageIcon("Numeros/branco.png"),JLabel.CENTER);
+  				 }
+  				 tabuleiro[i][j].setText(String.valueOf(jogo.tabuleiro[i][j]));
+  				 tabuleiro[i][j].add(imgs[i][j]); 					 
   			   }
   			  }
   		}
@@ -176,4 +214,12 @@ public class Principal {
   painelPauseReset.add(btnPauseReset);
   
  }
+ 
+ public void acaoBotao(ActionEvent e) {
+	 boolean venceu = jogo.ehVitoria();
+	 if(venceu == false) {
+		 
+	 }
+ } 
+ 
 }
