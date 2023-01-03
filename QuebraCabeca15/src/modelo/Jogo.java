@@ -18,7 +18,7 @@ public class Jogo {
 		
 		for(int i = 0;  i < this.tam; i++) {
 			for(int j = 0; j < this.tam; j++) {
-				if(tabuleiro[i][j] != contador || tabuleiro[i][j] != -1) {
+				if(tabuleiro[i][j] != contador && tabuleiro[i][j] != -1) {
 					return false;
 				}
 				contador++;
@@ -72,12 +72,21 @@ public class Jogo {
 		}
 
 	}
-	public static void main(String[] args) {
-		Jogo test = new Jogo();
-		for(int i = 0; i < test.tam; i++) {
-			for(int j = 0; j < test.tam; j++) {
-				System.out.println(test.tabuleiro[i][j]);
+	public void troca(int linha1, int coluna1, int linha2, int coluna2) {
+		int aux = this.tabuleiro[linha1][coluna1];
+		this.tabuleiro[linha1][coluna1] = this.tabuleiro[linha2][coluna2];
+		this.tabuleiro[linha2][coluna2] = aux;
+	}
+	
+	public void testeOrdenado() {
+		int count = 1;
+		for(int i = 0; i< tam; i++) {
+			for(int j = 0; j < tam; j++) {
+				tabuleiro[i][j] = count;
+				count++;
 			}
+			tabuleiro[3][2]=-1;
+			tabuleiro[3][3] = 15;
 		}
 	}
 }
