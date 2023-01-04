@@ -5,8 +5,14 @@ public class Jogador {
 	public Jogo jogo;
 	private double pontos;
 	private int rank;
+	private int idJogador;
 	
-	
+	public Jogador(int idJogaor, String nome, Jogo jogo, double pontos) {
+		this.idJogador = idJogaor;
+		this.nome = nome;
+		this.jogo =jogo;
+		this.pontos = pontos;
+	}
 	
 	public Jogo getTabuleiro() {
 		return jogo;
@@ -42,5 +48,9 @@ public class Jogador {
 	
 	private String getNome() {
 		return this.nome;
+	}
+	
+	private int getIdJogador() {
+		return this.idJogador;
 	}
 }

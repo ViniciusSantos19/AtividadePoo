@@ -7,6 +7,7 @@ public class Jogo {
 	private int array[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,-1};
 	private int pontos;
 	private int tam = 4;
+	private int idJogo;
 	
 	public Jogo() {
 		this.getArrayValido();
@@ -48,11 +49,17 @@ public class Jogo {
 	public void getArrayValido() {
 		do {
 			this.embaralhaArray();
+		}while(!this.ehValido());
+	}
+	
+	public void getArrayInvalido() {
+		do {
+			this.embaralhaArray();
 		}while(this.ehValido());
 	}
 	
 	private void embaralhaArray() {
-		int tamTab = this.tam * this.tam;
+		int tamTab = this.tam * this.tam - 1;
 		Random aleatorio = new Random();
 		while(tamTab > 1) {
 			int num = aleatorio.nextInt(tamTab--);
@@ -89,4 +96,31 @@ public class Jogo {
 			tabuleiro[3][3] = 15;
 		}
 	}
+
+	public int getPontos() {
+		return pontos;
+	}
+
+	public void setPontos(int pontos) {
+		this.pontos = pontos;
+	}
+
+	public int getTam() {
+		return tam;
+	}
+
+	public void setTam(int tam) {
+		this.tam = tam;
+	}
+
+	public int getIdJogo() {
+		return idJogo;
+	}
+
+	public void setIdJogo(int idJogo) {
+		this.idJogo = idJogo;
+	}
+	
+	
+	
 }

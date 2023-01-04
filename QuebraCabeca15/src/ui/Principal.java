@@ -16,9 +16,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
+import modelo.Jogador;
 import modelo.Jogo;
 
 import java.awt.Font;
+import javax.swing.JComboBox;
 
 public class Principal implements ActionListener{
 
@@ -26,8 +28,12 @@ public class Principal implements ActionListener{
  private int tam = 4;
  private JButton tabuleiro[][] = new JButton[4][4];
  private JLabel imgs[][] = new JLabel[4][4];
- private JTextField textField;
+ private JTextField txtNome;
  private Jogo jogo = new Jogo();
+ private Jogador jogador;
+ private JTextField textField;
+ private JTextField textField_1;
+ private JTextField textField_2;
  /**
   * Launch the application.
   */
@@ -61,6 +67,9 @@ public class Principal implements ActionListener{
   frame.getContentPane().setLayout(null);
   frame.setResizable(false);
   
+  String qntdJogadores[] = {"1 jogador","2 jogadores", "3 jogadores"};
+  String parOuImpar[] = {"embaralhar par","embaralhar ímpar"};
+  
   JPanel painelMenu = new JPanel();
   painelMenu.setBounds(0, 0, 157, 266);
   frame.getContentPane().add(painelMenu);
@@ -71,6 +80,34 @@ public class Principal implements ActionListener{
   tabedPane.setBounds(155, 0, 529, 368);
   frame.getContentPane().add(tabedPane);
   
+  JPanel painelCadastro = new JPanel();
+  painelCadastro.setLayout(null);
+  tabedPane.addTab("Cadastro", null, painelCadastro, null);
+  
+  JLabel lbNome_1 = new JLabel("Nome:");
+  lbNome_1.setFont(new Font("Dialog", Font.PLAIN, 20));
+  lbNome_1.setBounds(12, 39, 91, 42);
+  painelCadastro.add(lbNome_1);
+  
+  textField_1 = new JTextField();
+  textField_1.setColumns(10);
+  textField_1.setBounds(84, 39, 130, 35);
+  painelCadastro.add(textField_1);
+  
+  JLabel lbNome_1_1 = new JLabel("Código:");
+  lbNome_1_1.setFont(new Font("Dialog", Font.PLAIN, 20));
+  lbNome_1_1.setBounds(12, 122, 91, 42);
+  painelCadastro.add(lbNome_1_1);
+  
+  textField_2 = new JTextField();
+  textField_2.setColumns(10);
+  textField_2.setBounds(94, 122, 130, 35);
+  painelCadastro.add(textField_2);
+  
+  JButton btnCadastra = new JButton("Cadastrar");
+  btnCadastra.setBounds(358, 122, 123, 37);
+  painelCadastro.add(btnCadastra);
+  
   JPanel painelLogin = new JPanel();
   tabedPane.addTab("Login", null, painelLogin, null);
   painelLogin.setLayout(null);
@@ -78,7 +115,7 @@ public class Principal implements ActionListener{
   JPanel painelJogo = new JPanel();
   painelJogo.setLayout(new GridLayout(tam,tam));
   tabedPane.addTab("Jogo", null, painelJogo, null);
-  tabedPane.setEnabledAt(1, false);
+  tabedPane.setEnabledAt(2, false);
   
   JPanel painelRank = new JPanel();
   tabedPane.addTab("Rank", null, painelRank, null);
@@ -89,61 +126,112 @@ public class Principal implements ActionListener{
   painelLogin.add(lbNome);
   
   
+  txtNome = new JTextField();
+  txtNome.setBounds(88, 25, 130, 35);
+  painelLogin.add(txtNome);
+  txtNome.setColumns(10);
+  
+  JLabel lbMododeJogo = new JLabel("Modo de Jogo:");
+  lbMododeJogo.setFont(new Font("Dialog", Font.PLAIN, 20));
+  lbMododeJogo.setBounds(10, 155, 155, 42);
+  painelLogin.add(lbMododeJogo);
+  
+  JLabel lblCodigo = new JLabel("Código:");
+  lblCodigo.setFont(new Font("Dialog", Font.PLAIN, 20));
+  lblCodigo.setBounds(10, 79, 91, 42);
+  painelLogin.add(lblCodigo);
+  
   textField = new JTextField();
-  textField.setBounds(88, 25, 130, 35);
-  painelLogin.add(textField);
   textField.setColumns(10);
+  textField.setBounds(88, 86, 91, 35);
+  painelLogin.add(textField);
   
+  JComboBox cbModoJogo = new JComboBox(parOuImpar);
+  cbModoJogo.setBounds(165, 166, 177, 24);
+  painelLogin.add(cbModoJogo);
   
+  JLabel lblQuantidadeDeJogadores = new JLabel("Quantidade de jogadores:");
+  lblQuantidadeDeJogadores.setFont(new Font("Dialog", Font.PLAIN, 20));
+  lblQuantidadeDeJogadores.setBounds(10, 225, 275, 42);
+  painelLogin.add(lblQuantidadeDeJogadores);
   
-  
+  JComboBox cbQntdJogadores = new JComboBox(qntdJogadores);
+  cbQntdJogadores.setBounds(274, 236, 130, 24);
+  painelLogin.add(cbQntdJogadores);
+
   final JButton btnMenu = new JButton("Login");
   btnMenu.addActionListener(new ActionListener() {
    public void actionPerformed(ActionEvent e) {
     if(e.getSource() == btnMenu) {
-     tabedPane.setSelectedIndex(0);
+     tabedPane.setSelectedIndex(1);
     }
    }
   });
-  btnMenu.setBounds(12, 30, 117, 25);
+  btnMenu.setBounds(12, 85, 117, 25);
   painelMenu.add(btnMenu);
   
   final JButton btnJogo = new JButton("Jogo");
   btnJogo.addActionListener(new ActionListener() {
    public void actionPerformed(ActionEvent e) {
     if(e.getSource() == btnJogo) {
-     tabedPane.setSelectedIndex(1);
-    }
-   }
-  });
-  btnJogo.setEnabled(false);
-  btnJogo.setBounds(12, 110, 117, 25);
-  painelMenu.add(btnJogo);
-  
-  final JButton btnRank = new JButton("Rank");
-  btnRank.setBounds(12, 189, 117, 25);
-  painelMenu.add(btnRank);
-  btnRank.addActionListener(new ActionListener() {
-   public void actionPerformed(ActionEvent e) {
-    if(e.getSource() == btnRank) {
      tabedPane.setSelectedIndex(2);
     }
    }
   });
+  btnJogo.setEnabled(false);
+  btnJogo.setBounds(12, 149, 117, 25);
+  painelMenu.add(btnJogo);
   
-  final JButton btnIniciar = new JButton("Inicar Jogo");
+  final JButton btnRank = new JButton("Rank");
+  btnRank.setBounds(12, 215, 117, 25);
+  painelMenu.add(btnRank);
+  
+  final JButton btnCadastro = new JButton("Cadastro");
+  btnCadastro.addActionListener(new ActionListener() {
+  	public void actionPerformed(ActionEvent e) {
+  		if(e.getSource() == btnCadastro) {
+  			tabedPane.setSelectedIndex(0);
+  		}
+  	}
+  });
+  btnCadastro.setBounds(12, 26, 117, 25);
+  painelMenu.add(btnCadastro);
+  btnRank.addActionListener(new ActionListener() {
+   public void actionPerformed(ActionEvent e) {
+    if(e.getSource() == btnRank) {
+     tabedPane.setSelectedIndex(3);
+     	
+    }
+   }
+  });
+  
+  final JButton btnIniciar = new JButton("Novo jogo");
   btnIniciar.addActionListener(new ActionListener() {
    public void actionPerformed(ActionEvent e) {
     if(e.getSource() == btnIniciar) {
-     btnJogo.setEnabled(true);
+    	if(!txtNome.getText().isEmpty()) {
+    		jogo.setIdJogo(1);
+    		btnJogo.setEnabled(true);
+    	}
     }
    }
   });
   btnIniciar.setBounds(355, 25, 123, 37);
   painelLogin.add(btnIniciar);
   
+  JButton btnCarregarJogo = new JButton("Carregar");
+  btnCarregarJogo.addActionListener(new ActionListener() {
+  	public void actionPerformed(ActionEvent arg0) {
+  		
+  	}
+  });
+  btnCarregarJogo.setBounds(355, 90, 123, 37);
+  painelLogin.add(btnCarregarJogo);
+  
+  
+    
   JPanel painelPauseReset = new JPanel();
-  painelPauseReset.setBounds(0, 265, 164, 103);
+  painelPauseReset.setBounds(0, 265, 157, 103);
   frame.getContentPane().add(painelPauseReset);
   painelPauseReset.setLayout(null);
   painelPauseReset.setBackground(Color.RED);
@@ -166,8 +254,8 @@ public class Principal implements ActionListener{
     tabuleiro[i][j].add(imgs[i][j]);
     
     tabuleiro[i][j].setText(texto);
-    tabuleiro[i][j].setForeground(Color.WHITE);
-    tabuleiro[i][j].setBackground(Color.WHITE);
+    tabuleiro[i][j].setForeground(Color.DARK_GRAY);
+    tabuleiro[i][j].setBackground(Color.DARK_GRAY);
     painelJogo.add(tabuleiro[i][j]);
    }
   }
@@ -259,5 +347,4 @@ public class Principal implements ActionListener{
 	 }
 		
 	}
- 
 }
