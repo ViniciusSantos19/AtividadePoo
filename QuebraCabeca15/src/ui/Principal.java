@@ -31,7 +31,7 @@ public class Principal implements ActionListener{
  private JTextField txtNome;
  private Jogo jogo = new Jogo();
  private Jogador jogador;
- private JTextField textField;
+ private JTextField txtCodigo;
  private JTextField textField_1;
  private JTextField textField_2;
  /**
@@ -141,10 +141,10 @@ public class Principal implements ActionListener{
   lblCodigo.setBounds(10, 79, 91, 42);
   painelLogin.add(lblCodigo);
   
-  textField = new JTextField();
-  textField.setColumns(10);
-  textField.setBounds(88, 86, 91, 35);
-  painelLogin.add(textField);
+  txtCodigo = new JTextField();
+  txtCodigo.setColumns(10);
+  txtCodigo.setBounds(88, 86, 91, 35);
+  painelLogin.add(txtCodigo);
   
   JComboBox cbModoJogo = new JComboBox(parOuImpar);
   cbModoJogo.setBounds(165, 166, 177, 24);
@@ -209,8 +209,11 @@ public class Principal implements ActionListener{
   btnIniciar.addActionListener(new ActionListener() {
    public void actionPerformed(ActionEvent e) {
     if(e.getSource() == btnIniciar) {
-    	if(!txtNome.getText().isEmpty()) {
-    		jogo.setIdJogo(1);
+    	if(!txtNome.getText().isEmpty() && !txtCodigo.getText().isEmpty()) {
+    		String nome = txtNome.getText();
+    		int codigo = Integer.parseInt(txtCodigo.getText());
+    		Jogador jogador = new Jogador(codigo,nome,jogo,0);
+    		jogo.setIdJogo(codigo);
     		btnJogo.setEnabled(true);
     	}
     }
