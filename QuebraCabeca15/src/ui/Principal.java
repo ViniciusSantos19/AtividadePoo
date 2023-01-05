@@ -212,8 +212,8 @@ public class Principal implements ActionListener{
     	if(!txtNome.getText().isEmpty() && !txtCodigo.getText().isEmpty()) {
     		String nome = txtNome.getText();
     		int codigo = Integer.parseInt(txtCodigo.getText());
-    		Jogador jogador = new Jogador(codigo,nome,jogo,0);
-    		jogo.setIdJogo(codigo);
+    		Jogador jogador = new Jogador(codigo,nome,0);
+    		jogo.setIdJogador(codigo);
     		btnJogo.setEnabled(true);
     	}
     }

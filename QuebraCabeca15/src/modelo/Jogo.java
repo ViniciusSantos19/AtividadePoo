@@ -1,13 +1,15 @@
 package modelo;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Jogo {
+public class Jogo implements Serializable{
 	public int tabuleiro[][] = new int[4][4];
 	private int array[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,-1};
 	private int pontos;
 	private int tam = 4;
 	private int idJogo;
+	private int idJogador;
 	
 	public Jogo() {
 		this.getArrayValido();
@@ -121,6 +123,16 @@ public class Jogo {
 		this.idJogo = idJogo;
 	}
 	
+	public int getIdJogador() {
+		return idJogador;
+	}
+
+	public void setIdJogador(int idJogador) {
+		this.idJogador= idJogador;
+	}
 	
+	public int [][] getTabuleiro(){
+		return this.tabuleiro;
+	}
 	
 }
