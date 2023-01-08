@@ -30,8 +30,8 @@ public class Agenda {
 		return this.connection.UpdatePontosJogador(idJogador, pontos);
 	}
 	
-	public Jogo updateTabuleiro(Jogo jogo, int idJogo) throws Exception {
-		return this.connection.UpdateJogo(jogo, 0);
+	public void updateTabuleiro(Jogo jogo, int idJogo) throws Exception {
+		this.connection.UpdateJogo(jogo, idJogo);
 	}
 	
 	public void addJogoJogador(int pk_jogo, int pk_jogador)throws Exception {

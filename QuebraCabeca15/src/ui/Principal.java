@@ -333,9 +333,10 @@ public class Principal implements ActionListener{
 					String[] array = (String[]) lista.toArray(new String[0]);
 					JComboBox cbListaJogos = new JComboBox(array);
 					JOptionPane.showMessageDialog(null, cbListaJogos, "Selecione o save", JOptionPane.QUESTION_MESSAGE);
-					Jogo auxJogo = bd.getJogo(Integer.parseInt(cbListaJogos.getSelectedItem().toString()));
-					jogo.carregaJogo(auxJogo);
-					idJogo = Integer.parseInt(cbListaJogos.getSelectedItem().toString());
+					int aux= Integer.parseInt(cbListaJogos.getSelectedItem().toString());
+					jogo= bd.getJogo(aux);
+					idJogo = aux;
+					//jogo.carregaJogo(auxJogo);
 					for(int i = 0; i < tam; i++) {
 			   			   for(int j = 0; j < tam; j++) {
 			   				String texto = i+","+j;
@@ -448,18 +449,19 @@ public class Principal implements ActionListener{
   btnPausar.setBounds(29, 64, 101, 25);
   painelPauseReset.add(btnPausar);
   
-  JButton btnSalvar = new JButton("Salvar");
+  final JButton btnSalvar = new JButton("Salvar");
   btnSalvar.addActionListener(new ActionListener() {
-  	public void actionPerformed(ActionEvent arg0) {
-  		try {
-  			int aux = idJogo;
-  			Jogo jogoAux = jogo;
-  			bd.updateTabuleiro(jogoAux, idJogo);
-			JOptionPane.showMessageDialog(btnCadastra, "Jogo "+idJogo+" salvo com sucesso");
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(btnCadastra, "Erro ao salvar o jogo");
-			e.printStackTrace();
-		}
+  	public void actionPerformed(ActionEvent e) {
+  		if(e.getSource() == btnSalvar) {
+  			try {
+  	  			Jogo jogoAux = jogo;
+  	  			bd.updateTabuleiro(jogoAux, idJogo);
+  				JOptionPane.showMessageDialog(btnCadastra, "Jogo "+idJogo+" salvo com sucesso");
+  			} catch (Exception e1) {
+  				JOptionPane.showMessageDialog(btnCadastra, "Erro ao salvar o jogo");
+  				e1.printStackTrace();
+  			}
+  		}
   	}
   });
   btnSalvar.setBounds(29, 97, 101, 25);

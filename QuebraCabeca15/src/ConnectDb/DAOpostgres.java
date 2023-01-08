@@ -42,15 +42,18 @@ public class DAOpostgres implements DAOjogo{
 		String select = "SELECT  OBJETO FROM JOGO AS J WHERE PK_JOGO ="+"'"+idJogo+"'";
 		Statement stmt = this.conn.getConnection().createStatement();
 		ResultSet rSet = stmt.executeQuery(select);
-		rSet.next();
-		return converterByteParaJogo(rSet.getBytes(1));
+		Jogo jogo = null;
+		if(rSet.next()){
+			jogo = converterByteParaJogo(rSet.getBytes(1));
+			jogo.setIdJogo(idJogo);
+		}
+		return jogo;
 	}
 	
-	public Jogo UpdateJogo(Jogo jogo, int id) throws Exception {
+	public void UpdateJogo(Jogo jogo, int id) throws Exception {
 		PreparedStatement ps = this.conn.getConnection().prepareStatement("UPDATE JOGO SET OBJETO = ? WHERE PK_JOGO = "+id);
 		ps.setBytes(1, converteJogoParaByte(jogo));
 		ps.executeUpdate();
-		return jogo;
 	}
 
 	public Jogador setJogador(Jogador jogador) throws Exception {
@@ -149,18 +152,21 @@ public class DAOpostgres implements DAOjogo{
 	
 	public static void main(String[] args) {
 		DAOpostgres test = new DAOpostgres();
-		Jogo jogo = null;
+		Jogo jogo = new Jogo();
 		try {
-			jogo = test.getJogo(21);
-			;
+			jogo = test.getJogo(28);
+			System.out.println("//////");
+			System.out.println(jogo.getIdJogo());
 			for(int i = 0; i < 4; i++) {
 				for(int j = 0;  j < 4; j++) {
 					System.out.println(jogo.getTabuleiro()[i][j]);
 				}
 			}
-			System.out.println("______________");
-			//jogo.troca(3, 3, 2, 1);
-			jogo  = test.UpdateJogo(jogo, 21);
+			jogo.reiniciaJogo();
+			//jogo.troca(0, 1, 2, 3);
+			test.UpdateJogo(jogo, 28);
+			System.out.println("//////");
+			System.out.println(jogo.getIdJogo());
 			for(int i = 0; i < 4; i++) {
 				for(int j = 0;  j < 4; j++) {
 					System.out.println(jogo.getTabuleiro()[i][j]);
