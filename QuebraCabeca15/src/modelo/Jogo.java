@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Random;
 
 public class Jogo implements Serializable{
+	private static final long serialVersionUID = -2728396896590733984L;
 	public int tabuleiro[][] = new int[4][4];
 	private int array[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,-1};
 	private int pontos;
@@ -71,7 +72,16 @@ public class Jogo implements Serializable{
 		}
 	}
 	
-	private void iniciaTabuleiro(){
+	public void carregaJogo(Jogo carregamento) {
+
+		for(int i = 0; i < this.tam; i++) {
+			for(int j = 0; j < this.tam; j++) {
+				this.tabuleiro[i][j] =carregamento.getTabuleiro()[i][j];
+			}
+		}
+	}
+	
+	public void iniciaTabuleiro(){
 		int count = 0;
 		for(int i = 0; i < this.tam; i++) {
 			for(int j = 0; j < this.tam; j++) {
@@ -133,6 +143,10 @@ public class Jogo implements Serializable{
 	
 	public int [][] getTabuleiro(){
 		return this.tabuleiro;
+	}
+	
+	private int[] getPecas() {
+		return this.array;
 	}
 	
 }

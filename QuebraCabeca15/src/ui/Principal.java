@@ -13,14 +13,18 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
+import modelo.Agenda;
 import modelo.Jogador;
 import modelo.Jogo;
 
 import java.awt.Font;
 import javax.swing.JComboBox;
+import javax.swing.SwingConstants;
 
 public class Principal implements ActionListener{
 
@@ -32,8 +36,10 @@ public class Principal implements ActionListener{
  private Jogo jogo = new Jogo();
  private Jogador jogador;
  private JTextField txtCodigo;
- private JTextField textField_1;
- private JTextField textField_2;
+ private JTextField txtNomeCadastro;
+ private Agenda bd = new Agenda();
+ private JTextField txtCodCadastro;
+ private int idJogo;
  /**
   * Launch the application.
   */
@@ -62,7 +68,7 @@ public class Principal implements ActionListener{
   */
  private void initialize() {
   frame = new JFrame();
-  frame.setBounds(100, 100, 700, 400);
+  frame.setBounds(100, 100, 700, 458);
   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   frame.getContentPane().setLayout(null);
   frame.setResizable(false);
@@ -71,13 +77,13 @@ public class Principal implements ActionListener{
   String parOuImpar[] = {"embaralhar par","embaralhar ímpar"};
   
   JPanel painelMenu = new JPanel();
-  painelMenu.setBounds(0, 0, 157, 266);
+  painelMenu.setBounds(0, 0, 157, 308);
   frame.getContentPane().add(painelMenu);
   painelMenu.setLayout(null);
   painelMenu.setBackground(Color.DARK_GRAY);
   
   final JTabbedPane tabedPane = new JTabbedPane(JTabbedPane.TOP);
-  tabedPane.setBounds(155, 0, 529, 368);
+  tabedPane.setBounds(155, 0, 541, 426);
   frame.getContentPane().add(tabedPane);
   
   JPanel painelCadastro = new JPanel();
@@ -89,22 +95,39 @@ public class Principal implements ActionListener{
   lbNome_1.setBounds(12, 39, 91, 42);
   painelCadastro.add(lbNome_1);
   
-  textField_1 = new JTextField();
-  textField_1.setColumns(10);
-  textField_1.setBounds(84, 39, 130, 35);
-  painelCadastro.add(textField_1);
+  txtNomeCadastro = new JTextField();
+  txtNomeCadastro.setColumns(10);
+  txtNomeCadastro.setBounds(84, 39, 130, 35);
+  painelCadastro.add(txtNomeCadastro);
   
   JLabel lbNome_1_1 = new JLabel("Código:");
   lbNome_1_1.setFont(new Font("Dialog", Font.PLAIN, 20));
   lbNome_1_1.setBounds(12, 122, 91, 42);
   painelCadastro.add(lbNome_1_1);
   
-  textField_2 = new JTextField();
-  textField_2.setColumns(10);
-  textField_2.setBounds(94, 122, 130, 35);
-  painelCadastro.add(textField_2);
+  txtCodCadastro = new JTextField();
+  txtCodCadastro.setColumns(10);
+  txtCodCadastro.setBounds(94, 122, 130, 35);
+  painelCadastro.add(txtCodCadastro);
   
-  JButton btnCadastra = new JButton("Cadastrar");
+  final JButton btnCadastra = new JButton("Cadastrar");
+  btnCadastra.addActionListener(new ActionListener() {
+  	public void actionPerformed(ActionEvent e) {
+  		if(e.getSource() == btnCadastra) {
+  			if(!txtCodCadastro.getText().isEmpty() && ! txtNomeCadastro.getText().isEmpty()) {
+  				Jogador jogadorAux = new Jogador(Integer.parseInt(txtCodCadastro.getText()), txtNomeCadastro.getText(),0);
+  	  			try {
+  					bd.addJogador(jogadorAux);
+  					JOptionPane.showMessageDialog(btnCadastra, "Cadastrado com sucesso");
+  				} catch (Exception e1) {
+  					JOptionPane.showMessageDialog(btnCadastra, "Erro ao cadastrar");
+  					e1.printStackTrace();
+  				}
+  			}
+  			
+  		}
+  	}
+  });
   btnCadastra.setBounds(358, 122, 123, 37);
   painelCadastro.add(btnCadastra);
   
@@ -112,7 +135,7 @@ public class Principal implements ActionListener{
   tabedPane.addTab("Login", null, painelLogin, null);
   painelLogin.setLayout(null);
   
-  JPanel painelJogo = new JPanel();
+  final JPanel painelJogo = new JPanel();
   painelJogo.setLayout(new GridLayout(tam,tam));
   tabedPane.addTab("Jogo", null, painelJogo, null);
   tabedPane.setEnabledAt(2, false);
@@ -146,7 +169,7 @@ public class Principal implements ActionListener{
   txtCodigo.setBounds(88, 86, 91, 35);
   painelLogin.add(txtCodigo);
   
-  JComboBox cbModoJogo = new JComboBox(parOuImpar);
+  final JComboBox cbModoJogo = new JComboBox(parOuImpar);
   cbModoJogo.setBounds(165, 166, 177, 24);
   painelLogin.add(cbModoJogo);
   
@@ -196,6 +219,24 @@ public class Principal implements ActionListener{
   });
   btnCadastro.setBounds(12, 26, 117, 25);
   painelMenu.add(btnCadastro);
+  
+  JLabel labelHoras = new JLabel("00");
+  labelHoras.setForeground(new Color(238, 238, 236));
+  labelHoras.setFont(new Font("Dialog", Font.BOLD, 20));
+  labelHoras.setBounds(12, 251, 37, 34);
+  painelMenu.add(labelHoras);
+  
+  JLabel labelMinutos = new JLabel("00");
+  labelMinutos.setForeground(new Color(238, 238, 236));
+  labelMinutos.setFont(new Font("Dialog", Font.BOLD, 20));
+  labelMinutos.setBounds(61, 251, 37, 34);
+  painelMenu.add(labelMinutos);
+  
+  JLabel labelSegundos = new JLabel("00");
+  labelSegundos.setForeground(new Color(238, 238, 236));
+  labelSegundos.setFont(new Font("Dialog", Font.BOLD, 20));
+  labelSegundos.setBounds(110, 252, 37, 34);
+  painelMenu.add(labelSegundos);
   btnRank.addActionListener(new ActionListener() {
    public void actionPerformed(ActionEvent e) {
     if(e.getSource() == btnRank) {
@@ -212,9 +253,66 @@ public class Principal implements ActionListener{
     	if(!txtNome.getText().isEmpty() && !txtCodigo.getText().isEmpty()) {
     		String nome = txtNome.getText();
     		int codigo = Integer.parseInt(txtCodigo.getText());
-    		Jogador jogador = new Jogador(codigo,nome,0);
-    		jogo.setIdJogador(codigo);
-    		btnJogo.setEnabled(true);
+    		try {
+				Jogador jogador = bd.getJogador(codigo);
+				jogo = bd.AddJogo(jogo);
+				idJogo = jogo.getIdJogo();
+				bd.addJogoJogador(jogo.getIdJogo(), codigo);
+				JOptionPane.showMessageDialog(btnCadastra, "Login feito com sucesso");
+				if(cbModoJogo.getSelectedIndex() == 1) {
+					jogo.getArrayInvalido();
+					jogo.iniciaTabuleiro();
+		    		jogo.setIdJogador(codigo);
+		    		for(int i = 0; i < tam; i++) {
+		   			   for(int j = 0; j < tam; j++) {
+		   				String texto = i+","+j;
+		   				int  num = jogo.tabuleiro[i][j];
+		   				tabuleiro[i][j].remove(imgs[i][j]);
+		   				 if(num != -1) {
+		   					String numImg = "Numeros/"+num+".png";
+		   			    	imgs[i][j] = new JLabel(new ImageIcon(numImg),JLabel.CENTER);
+		   				 }else {
+		   					 imgs[i][j] = new JLabel(new ImageIcon("Numeros/branco.png"),JLabel.CENTER);
+		   				 }
+		   				 tabuleiro[i][j].setText(String.valueOf(jogo.tabuleiro[i][j]));
+		   				 tabuleiro[i][j].add(imgs[i][j]);
+		   				 tabuleiro[i][j].setText(texto);
+		   			   }
+		   			  }
+		    		btnJogo.setEnabled(true);
+		    		JOptionPane.showMessageDialog(cbModoJogo, "Jogo impar (IMPOSSIVEL)");
+				}else {
+					jogo.getArrayValido();
+					jogo.iniciaTabuleiro();
+		    		jogo.setIdJogador(codigo);
+		    		btnJogo.setEnabled(true);
+		    		for(int i = 0; i < tam; i++) {
+		   			   for(int j = 0; j < tam; j++) {
+		   				String texto = i+","+j;
+		   				int  num = jogo.tabuleiro[i][j];
+		   				tabuleiro[i][j].remove(imgs[i][j]);
+		   				 if(num != -1) {
+		   					String numImg = "Numeros/"+num+".png";
+		   			    	imgs[i][j] = new JLabel(new ImageIcon(numImg),JLabel.CENTER);
+		   				 }else {
+		   					 imgs[i][j] = new JLabel(new ImageIcon("Numeros/branco.png"),JLabel.CENTER);
+		   				 }
+		   				 tabuleiro[i][j].setText(String.valueOf(jogo.tabuleiro[i][j]));
+		   				 tabuleiro[i][j].add(imgs[i][j]);
+		   				 tabuleiro[i][j].setText(texto);
+		   			   }
+		   			  }
+		    		btnJogo.setEnabled(true);
+		    		JOptionPane.showMessageDialog(cbModoJogo, "Jogo par");
+				}
+				 tabedPane.setSelectedIndex(2);
+				
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(btnCadastra, "Erro ao fazer login");
+				e1.printStackTrace();
+			}
+    		
     	}
     }
    }
@@ -222,10 +320,46 @@ public class Principal implements ActionListener{
   btnIniciar.setBounds(355, 25, 123, 37);
   painelLogin.add(btnIniciar);
   
-  JButton btnCarregarJogo = new JButton("Carregar");
+  final JButton btnCarregarJogo = new JButton("Carregar");
   btnCarregarJogo.addActionListener(new ActionListener() {
-  	public void actionPerformed(ActionEvent arg0) {
-  		
+  	public void actionPerformed(ActionEvent e) {
+  		if(e.getSource() ==btnCarregarJogo) {
+  			if(!txtNome.getText().isEmpty() && !txtCodigo.getText().isEmpty()) {
+  				String nome = txtNome.getText();
+  	    		int codigo = Integer.parseInt(txtCodigo.getText());
+  	    		try {
+					jogador = bd.getJogador(codigo);
+					List lista = bd.getIdJogos(jogador);
+					String[] array = (String[]) lista.toArray(new String[0]);
+					JComboBox cbListaJogos = new JComboBox(array);
+					JOptionPane.showMessageDialog(null, cbListaJogos, "Selecione o save", JOptionPane.QUESTION_MESSAGE);
+					Jogo auxJogo = bd.getJogo(Integer.parseInt(cbListaJogos.getSelectedItem().toString()));
+					jogo.carregaJogo(auxJogo);
+					idJogo = Integer.parseInt(cbListaJogos.getSelectedItem().toString());
+					for(int i = 0; i < tam; i++) {
+			   			   for(int j = 0; j < tam; j++) {
+			   				String texto = i+","+j;
+			   				int  num = jogo.tabuleiro[i][j];
+			   				tabuleiro[i][j].remove(imgs[i][j]);
+			   				 if(num != -1) {
+			   					String numImg = "Numeros/"+num+".png";
+			   			    	imgs[i][j] = new JLabel(new ImageIcon(numImg),JLabel.CENTER);
+			   				 }else {
+			   					 imgs[i][j] = new JLabel(new ImageIcon("Numeros/branco.png"),JLabel.CENTER);
+			   				 }
+			   				 tabuleiro[i][j].setText(String.valueOf(jogo.tabuleiro[i][j]));
+			   				 tabuleiro[i][j].add(imgs[i][j]);
+			   				 tabuleiro[i][j].setText(texto);
+			   			   }
+			   			  }
+					btnJogo.setEnabled(true);
+					tabedPane.setSelectedIndex(2);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+  			}
+  		}
   	}
   });
   btnCarregarJogo.setBounds(355, 90, 123, 37);
@@ -234,7 +368,7 @@ public class Principal implements ActionListener{
   
     
   JPanel painelPauseReset = new JPanel();
-  painelPauseReset.setBounds(0, 265, 157, 103);
+  painelPauseReset.setBounds(0, 292, 157, 134);
   frame.getContentPane().add(painelPauseReset);
   painelPauseReset.setLayout(null);
   painelPauseReset.setBackground(Color.RED);
@@ -289,7 +423,7 @@ public class Principal implements ActionListener{
   		}
   	}
   });
-  btnPauseReset.setBounds(29, 12, 101, 25);
+  btnPauseReset.setBounds(29, 27, 101, 25);
   painelPauseReset.add(btnPauseReset);
   
   final JButton btnPausar = new JButton("Pausar");
@@ -311,8 +445,25 @@ public class Principal implements ActionListener{
   		}
   	}
   });
-  btnPausar.setBounds(29, 66, 101, 25);
+  btnPausar.setBounds(29, 64, 101, 25);
   painelPauseReset.add(btnPausar);
+  
+  JButton btnSalvar = new JButton("Salvar");
+  btnSalvar.addActionListener(new ActionListener() {
+  	public void actionPerformed(ActionEvent arg0) {
+  		try {
+  			int aux = idJogo;
+  			Jogo jogoAux = jogo;
+  			bd.updateTabuleiro(jogoAux, idJogo);
+			JOptionPane.showMessageDialog(btnCadastra, "Jogo "+idJogo+" salvo com sucesso");
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(btnCadastra, "Erro ao salvar o jogo");
+			e.printStackTrace();
+		}
+  	}
+  });
+  btnSalvar.setBounds(29, 97, 101, 25);
+  painelPauseReset.add(btnSalvar);
   
  }
  

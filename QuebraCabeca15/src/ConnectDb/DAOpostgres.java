@@ -23,14 +23,20 @@ public class DAOpostgres implements DAOjogo{
 	}
 	
 	public Jogo setJogo(Jogo jogo) throws Exception {
-		PreparedStatement ps = this.conn.getConnection().prepareStatement("INSERT INTO JOGO (PK_JOGO, FK_JOGADOR, OBJETO) "+
-		"VALUES (?,?,?)");
-		ps.setInt(1, jogo.getIdJogo());
-		ps.setInt(2, jogo.getIdJogador());
-		ps.setBytes(3, converteJogoParaByte(jogo));
+		PreparedStatement ps = this.conn.getConnection().prepareStatement("INSERT INTO JOGO (OBJETO) "+
+		"VALUES (?)",Statement.RETURN_GENERATED_KEYS);
+		//ps.setInt(1, jogo.getIdJogo());
+		ps.setBytes(1, converteJogoParaByte(jogo));
 		ps.execute();
+		ResultSet num = ps.getGeneratedKeys();
+		if(num.next()) {
+			jogo.setIdJogo(num.getInt(1));
+			return jogo;
+		}
 		return jogo;
 	}
+	
+	
 
 	public Jogo getJogo(int idJogo) throws Exception {
 		String select = "SELECT  OBJETO FROM JOGO AS J WHERE PK_JOGO ="+"'"+idJogo+"'";
@@ -80,11 +86,11 @@ public class DAOpostgres implements DAOjogo{
 		
 	}
 	
-	public Jogador UpdatePontosJogador(Jogador jogador)throws Exception {
-		PreparedStatement ps = this.conn.getConnection().prepareStatement("UPDATE JOGADOR SET PONTOS = ? WHERE PK_JOGADOR = "+jogador.getIdJogador());
-		ps.setDouble(1, jogador.getPontos());
+	public Jogador UpdatePontosJogador(int idJogador, double pontos)throws Exception {
+		PreparedStatement ps = this.conn.getConnection().prepareStatement("UPDATE JOGADOR SET PONTOS = ? WHERE PK_JOGADOR = "+idJogador);
+		ps.setDouble(1, pontos);
 		ps.executeUpdate();
-		return jogador;
+		return null;
 	}
 	
 	private static Jogo converterByteParaJogo(byte[] jogoByte) {
@@ -120,42 +126,50 @@ public class DAOpostgres implements DAOjogo{
      return null;
 	}
 	
+	public void setJogo_Jogador(int pk_jogo, int pk_jogador)throws Exception {
+		PreparedStatement ps = this.conn.getConnection().prepareStatement("INSERT INTO JOGO_JOGADOR (FK_JOGO, FK_JOGADOR) VALUES(?, ?)");
+		ps.setInt(1, pk_jogo);
+		ps.setInt(2, pk_jogador);
+		ps.execute();
+	}
 	
+	
+	public List<String> getIdJogoSalvo(Jogador jogador) throws Exception {
+		String select = "select fk_jogo from jogo_jogador as jj inner join jogo as j on(j.pk_jogo = jj.fk_jogo)\n"
+				+ "inner join jogador as ja on (ja.pk_jogador = jj.fk_jogador) where ja.pk_jogador ="+jogador.getIdJogador();
+		Statement stmt = this.conn.getConnection().createStatement();
+		ResultSet rSet = stmt.executeQuery(select);
+		List<String> lista = new ArrayList<String>();
+		while(rSet.next()) {
+			int num = rSet.getInt(1);
+			lista.add(Integer.toString(num));
+		}
+		return lista;
+	}
 	
 	public static void main(String[] args) {
 		DAOpostgres test = new DAOpostgres();
-		
-		Jogo jogo3 = new Jogo();
-		jogo3.setIdJogo(2);
-		jogo3.setIdJogador(1);
-		
-		for(int i = 0; i < 4; i++) {
-			for(int j = 0; j < 4; j++) {
-				System.out.println(jogo3.getTabuleiro()[i][j]);
-			}
-		}
-		System.out.println("/////");
-		
+		Jogo jogo = null;
 		try {
-			test.UpdateJogo(jogo3, 1);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		try {
-			jogo3 = test.getJogo(1);
+			jogo = test.getJogo(21);
+			;
 			for(int i = 0; i < 4; i++) {
-				for(int j = 0; j < 4; j++) {
-					System.out.println(jogo3.getTabuleiro()[i][j]);
+				for(int j = 0;  j < 4; j++) {
+					System.out.println(jogo.getTabuleiro()[i][j]);
 				}
 			}
-
+			System.out.println("______________");
+			//jogo.troca(3, 3, 2, 1);
+			jogo  = test.UpdateJogo(jogo, 21);
+			for(int i = 0; i < 4; i++) {
+				for(int j = 0;  j < 4; j++) {
+					System.out.println(jogo.getTabuleiro()[i][j]);
+				}
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		
 	}
 
