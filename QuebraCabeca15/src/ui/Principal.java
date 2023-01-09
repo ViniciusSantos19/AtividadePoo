@@ -12,9 +12,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
@@ -25,6 +29,10 @@ import modelo.Jogo;
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import java.awt.Scrollbar;
+import java.awt.Label;
 
 public class Principal implements ActionListener{
 
@@ -40,6 +48,11 @@ public class Principal implements ActionListener{
  private Agenda bd = new Agenda();
  private JTextField txtCodCadastro;
  private int idJogo;
+ private Label contagemTempo = new Label("00:00:00");
+ private boolean tempoPassando = false;
+ private int iCount = 0;
+ private Timer tm = null;
+ private int salvarCoun;
  /**
   * Launch the application.
   */
@@ -142,6 +155,48 @@ public class Principal implements ActionListener{
   
   JPanel painelRank = new JPanel();
   tabedPane.addTab("Rank", null, painelRank, null);
+  painelRank.setLayout(null);
+  
+  JLabel labelRank = new JLabel("Rank:");
+  labelRank.setFont(new Font("Dialog", Font.BOLD, 20));
+  labelRank.setBounds(12, 24, 79, 48);
+  painelRank.add(labelRank);
+  
+  final JTextArea textPane = new JTextArea();
+  textPane.setBackground(new Color(0, 0, 0));
+  textPane.setEnabled(false);
+  textPane.setBounds(84, 36, 225, 299);
+  textPane.setForeground(new Color(255, 255, 255));
+  painelRank.add(textPane);
+  JScrollPane jsp = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+  jsp.setBounds(84, 36, 225, 299);
+  painelRank.add(jsp);
+  
+  
+  final JButton btnSetRank = new JButton("Gerar rank");
+  btnSetRank.addActionListener(new ActionListener() {
+  	public void actionPerformed(ActionEvent arg0) {
+  		if(arg0.getSource() == btnSetRank) {
+  			try {
+  				List<Jogador> jogadores = bd.getRank();
+  				String lista = " ";
+  				for(int i = 0; i < jogadores.size(); i++) {
+  					
+  					lista+="\n"+jogadores.get(i).getIdJogador()+"\n"+jogadores.get(i).getNome()+"\n"+jogadores.get(i).getPontos()+"\n";
+  				}
+  				textPane.setText(lista);
+  			} catch (Exception e) {
+  				// TODO Auto-generated catch block
+  				e.printStackTrace();
+  			}
+  		}
+  		
+  	}
+  });
+  btnSetRank.setBounds(87, 347, 117, 25);
+  painelRank.add(btnSetRank);
+  
+ 
   
   JLabel lbNome = new JLabel("Nome:");
   lbNome.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -220,23 +275,11 @@ public class Principal implements ActionListener{
   btnCadastro.setBounds(12, 26, 117, 25);
   painelMenu.add(btnCadastro);
   
-  JLabel labelHoras = new JLabel("00");
-  labelHoras.setForeground(new Color(238, 238, 236));
-  labelHoras.setFont(new Font("Dialog", Font.BOLD, 20));
-  labelHoras.setBounds(12, 251, 37, 34);
-  painelMenu.add(labelHoras);
   
-  JLabel labelMinutos = new JLabel("00");
-  labelMinutos.setForeground(new Color(238, 238, 236));
-  labelMinutos.setFont(new Font("Dialog", Font.BOLD, 20));
-  labelMinutos.setBounds(61, 251, 37, 34);
-  painelMenu.add(labelMinutos);
-  
-  JLabel labelSegundos = new JLabel("00");
-  labelSegundos.setForeground(new Color(238, 238, 236));
-  labelSegundos.setFont(new Font("Dialog", Font.BOLD, 20));
-  labelSegundos.setBounds(110, 252, 37, 34);
-  painelMenu.add(labelSegundos);
+  contagemTempo.setFont(new Font("Dialog", Font.PLAIN, 20));
+  contagemTempo.setForeground(new Color(255, 255, 255));
+  contagemTempo.setBounds(12, 246, 117, 40);
+  painelMenu.add(contagemTempo);
   btnRank.addActionListener(new ActionListener() {
    public void actionPerformed(ActionEvent e) {
     if(e.getSource() == btnRank) {
@@ -259,10 +302,12 @@ public class Principal implements ActionListener{
 				idJogo = jogo.getIdJogo();
 				bd.addJogoJogador(jogo.getIdJogo(), codigo);
 				JOptionPane.showMessageDialog(btnCadastra, "Login feito com sucesso");
+				
+				iniciarCronometro();
+				
 				if(cbModoJogo.getSelectedIndex() == 1) {
 					jogo.getArrayInvalido();
 					jogo.iniciaTabuleiro();
-		    		jogo.setIdJogador(codigo);
 		    		for(int i = 0; i < tam; i++) {
 		   			   for(int j = 0; j < tam; j++) {
 		   				String texto = i+","+j;
@@ -284,7 +329,6 @@ public class Principal implements ActionListener{
 				}else {
 					jogo.getArrayValido();
 					jogo.iniciaTabuleiro();
-		    		jogo.setIdJogador(codigo);
 		    		btnJogo.setEnabled(true);
 		    		for(int i = 0; i < tam; i++) {
 		   			   for(int j = 0; j < tam; j++) {
@@ -336,7 +380,9 @@ public class Principal implements ActionListener{
 					int aux= Integer.parseInt(cbListaJogos.getSelectedItem().toString());
 					jogo= bd.getJogo(aux);
 					idJogo = aux;
-					//jogo.carregaJogo(auxJogo);
+					
+					CarregarTempo(jogo.getSecSalvo());
+					
 					for(int i = 0; i < tam; i++) {
 			   			   for(int j = 0; j < tam; j++) {
 			   				String texto = i+","+j;
@@ -405,6 +451,9 @@ public class Principal implements ActionListener{
   	public void actionPerformed(ActionEvent e) {
   		if(e.getSource() == btnPauseReset) {
   			jogo.reiniciaJogo();
+  			
+			iniciarCronometro();
+  			
   			for(int i = 0; i < tam; i++) {
   			   for(int j = 0; j < tam; j++) {
   				String texto = i+","+j;
@@ -431,6 +480,17 @@ public class Principal implements ActionListener{
   btnPausar.addActionListener(new ActionListener() {
   	public void actionPerformed(ActionEvent e) {
   		if(e.getSource() == btnPausar) {
+  			if (tempoPassando == true) {
+  				//tm = new Timer();
+				tm.cancel();
+				tm.purge();
+				tempoPassando = false;
+				salvarCoun = iCount;
+
+			}else {
+				tempoPassando= true;
+				CarregarTempo(salvarCoun);
+			}
   			for(int i = 0; i < tam; i++) {
   				for(int j = 0;  j < tam; j++) {
   					if(tabuleiro[i][j].isEnabled() == true) {
@@ -455,6 +515,7 @@ public class Principal implements ActionListener{
   		if(e.getSource() == btnSalvar) {
   			try {
   	  			Jogo jogoAux = jogo;
+  	  			jogoAux.setSecSalvo(iCount);
   	  			bd.updateTabuleiro(jogoAux, idJogo);
   				JOptionPane.showMessageDialog(btnCadastra, "Jogo "+idJogo+" salvo com sucesso");
   			} catch (Exception e1) {
@@ -499,8 +560,73 @@ public class Principal implements ActionListener{
         	 }
          }
 	 }else {
+		 try {
+			bd.updatePontos(jogador.getIdJogador(),jogo.calculaPonos(iCount));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		 tempoPassando = false;
+		 iCount = 0;
+		 
 		 JOptionPane.showMessageDialog(frame, "VOCE VENCEU");
+		 
 	 }
 		
 	}
+ 
+ 	public void iniciarCronometro() {
+ 		if(tempoPassando == true) {
+			tm.cancel();
+			tm.purge();
+		}
+ 		tempoPassando = true;
+		iCount = 0;
+		
+		tm = new Timer();
+		
+		tm.scheduleAtFixedRate(new TimerTask() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				iCount++;
+				salvarCoun = iCount;
+				int seg = iCount % 60;
+				int min = iCount / 60;
+				int hora = min / 60;
+				min %= 60;
+				contagemTempo.setText(String.format("%02d:%02d:%02d", hora, min, seg)); // Mostra Tempo
+
+			}
+
+		}, 1000, 1000); // 1000 = 1s
+ 	}
+ 	
+ 	public void CarregarTempo(int tempoSomando) {
+		if(tempoPassando == true) {
+			tm.cancel();
+			tm.purge();
+		}
+ 		tempoPassando = true;
+		iCount = tempoSomando;
+		
+		tm = new Timer();
+		tm.scheduleAtFixedRate(new TimerTask() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				iCount++;
+				int seg = iCount % 60;
+				int min = iCount / 60;
+				int hora = min / 60;
+				min %= 60;
+				contagemTempo.setText(String.format("%02d:%02d:%02d", hora, min, seg)); // Mostra Tempo
+
+			}
+
+		}, 1000, 1000); // 1000 = 1s
+ 	}
+ 	
 }

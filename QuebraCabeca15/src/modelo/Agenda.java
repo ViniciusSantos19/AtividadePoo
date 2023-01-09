@@ -41,4 +41,8 @@ public class Agenda {
 	public List<String> getIdJogos(Jogador jogador) throws Exception {
 		return this.connection.getIdJogoSalvo(jogador);
 	}
+	
+	public List<Jogador> getRank() throws Exception{
+		return this.connection.getRank();
+	}
 }

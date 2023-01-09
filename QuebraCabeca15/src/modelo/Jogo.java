@@ -10,7 +10,7 @@ public class Jogo implements Serializable{
 	private int pontos;
 	private int tam = 4;
 	private int idJogo;
-	private int idJogador;
+	private int secSalvo;
 	
 	public Jogo() {
 		this.getArrayValido();
@@ -133,13 +133,7 @@ public class Jogo implements Serializable{
 		this.idJogo = idJogo;
 	}
 	
-	public int getIdJogador() {
-		return idJogador;
-	}
-
-	public void setIdJogador(int idJogador) {
-		this.idJogador= idJogador;
-	}
+	
 	
 	public int [][] getTabuleiro(){
 		return this.tabuleiro;
@@ -147,6 +141,32 @@ public class Jogo implements Serializable{
 	
 	private int[] getPecas() {
 		return this.array;
+	}
+	
+	public double calculaPonos(double tempo) {
+		double pontos = 0;
+		
+		if(tempo <= 60) {
+			pontos = 1000;
+			pontos += (50/30) * tempo;
+		}else if(tempo > 60 && tempo <= 5999) {
+			pontos = 100;
+			pontos += 6 * tempo;
+		}else if(tempo >= 6000){
+			pontos = 10;
+			pontos += (1/600) * tempo;
+		}
+		
+		
+		return pontos;
+	}
+	
+	public void setSecSalvo(int  secSalvo) {
+		this.secSalvo =  secSalvo;
+	}
+	
+	public int getSecSalvo() {
+		return this. secSalvo;
 	}
 	
 }

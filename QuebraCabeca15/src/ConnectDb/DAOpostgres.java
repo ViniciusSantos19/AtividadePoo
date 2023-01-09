@@ -39,20 +39,22 @@ public class DAOpostgres implements DAOjogo{
 	
 
 	public Jogo getJogo(int idJogo) throws Exception {
-		String select = "SELECT  OBJETO FROM JOGO AS J WHERE PK_JOGO ="+"'"+idJogo+"'";
+		String select = "SELECT  OBJETO, SEGUNDOS FROM JOGO AS J WHERE PK_JOGO ="+"'"+idJogo+"'";
 		Statement stmt = this.conn.getConnection().createStatement();
 		ResultSet rSet = stmt.executeQuery(select);
 		Jogo jogo = null;
 		if(rSet.next()){
 			jogo = converterByteParaJogo(rSet.getBytes(1));
 			jogo.setIdJogo(idJogo);
+			jogo.setSecSalvo(rSet.getInt("SEGUNDOS"));
 		}
 		return jogo;
 	}
 	
 	public void UpdateJogo(Jogo jogo, int id) throws Exception {
-		PreparedStatement ps = this.conn.getConnection().prepareStatement("UPDATE JOGO SET OBJETO = ? WHERE PK_JOGO = "+id);
+		PreparedStatement ps = this.conn.getConnection().prepareStatement("UPDATE JOGO SET OBJETO = ?, SEGUNDOS = ? WHERE PK_JOGO = "+id);
 		ps.setBytes(1, converteJogoParaByte(jogo));
+		ps.setInt(2, jogo.getSecSalvo());
 		ps.executeUpdate();
 	}
 
@@ -77,7 +79,7 @@ public class DAOpostgres implements DAOjogo{
 	}
 
 	public List<Jogador> getRank() throws Exception {
-		String select = "SELECT (NOME, PONTOS, PK_JOGADOR) FROM JOGADOR AS J ORDER BY J.PONTOS";
+		String select = "SELECT  PK_JOGADOR, NOME, PONTOS FROM JOGADOR AS J ORDER BY J.PONTOS DESC";
 		Statement stmt = this.conn.getConnection().createStatement();
 		ResultSet rSet = stmt.executeQuery(select);
 		List<Jogador> lista = new  ArrayList<Jogador>();
