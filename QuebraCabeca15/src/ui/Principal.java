@@ -313,7 +313,7 @@ public class Principal implements ActionListener{
     		String nome = txtNome.getText();
     		int codigo = Integer.parseInt(txtCodigo.getText());
     		try {
-				Jogador jogador = bd.getJogador(codigo);
+				jogador = bd.getJogador(codigo);
 				jogo = bd.AddJogo(jogo);
 				idJogo = jogo.getIdJogo();
 				bd.addJogoJogador(jogo.getIdJogo(), codigo);
@@ -479,7 +479,7 @@ public class Principal implements ActionListener{
   			try {
   	  			Jogo jogoAux = jogo;
   	  			jogoAux.setSecSalvo(iCount);
-  	  			bd.updateTabuleiro(jogoAux, idJogo);
+  	  			bd.updateTabuleiro(jogoAux, jogo.getIdJogo());
   				JOptionPane.showMessageDialog(btnCadastra, "Jogo "+idJogo+" salvo com sucesso");
   			} catch (Exception e1) {
   				JOptionPane.showMessageDialog(btnCadastra, "Erro ao salvar o jogo");
@@ -538,8 +538,8 @@ public class Principal implements ActionListener{
 		 JOptionPane.showMessageDialog(frame, "VOCE VENCEU");
 		 reiniciarTabuleiro();
 		 try {
-			bd.AddJogo(jogo);
-			bd.addJogoJogador(idJogo, jogador.getIdJogador());
+			jogo = bd.AddJogo(jogo);
+			bd.addJogoJogador(jogo.getIdJogo(), jogador.getIdJogador());
 			tempoPassando = true;
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -633,7 +633,7 @@ public class Principal implements ActionListener{
  		}else {
  			jogo.getArrayValido();
  		}
- 		jogo.iniciaTabuleiro();
+ 		jogo.testeOrdenado();
  		for(int i = 0; i < tam; i++) {
 			   for(int j = 0; j < tam; j++) {
 				String texto = i+","+j;
