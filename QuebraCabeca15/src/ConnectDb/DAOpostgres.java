@@ -67,7 +67,7 @@ public class DAOpostgres implements DAOjogo{
 		return jogador;
 	}
 
-	public Jogador getJogador(int idJogador) throws Exception {
+	public Jogador getJogador(int idJogador, String nome) throws Exception {
 		String select = "SELECT  PK_JOGADOR, NOME, PONTOS FROM JOGADOR AS J WHERE PK_JOGADOR ="+"'"+idJogador+"'";
 		Statement stmt = this.conn.getConnection().createStatement();
 		ResultSet rSet = stmt.executeQuery(select);

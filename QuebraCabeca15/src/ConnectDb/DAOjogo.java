@@ -9,7 +9,7 @@ public interface DAOjogo {
 	public Jogo setJogo(Jogo jogo)throws Exception;
 	public Jogo getJogo(int idJogo)throws Exception;
 	public Jogador setJogador(Jogador jogador)throws Exception;
-	public Jogador getJogador(int idJogador)throws Exception;
+	public Jogador getJogador(int idJogador, String nome)throws Exception;
 	public void UpdateJogo(Jogo jogo, int id)throws Exception;
 	public Jogador UpdatePontosJogador(int idJogador, double pontos)throws Exception;
 	public List<Jogador> getRank()throws Exception;

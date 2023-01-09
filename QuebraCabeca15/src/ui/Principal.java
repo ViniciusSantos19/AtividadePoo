@@ -313,7 +313,7 @@ public class Principal implements ActionListener{
     		String nome = txtNome.getText();
     		int codigo = Integer.parseInt(txtCodigo.getText());
     		try {
-				jogador = bd.getJogador(codigo);
+				jogador = bd.getJogador(codigo,nome);
 				jogo = bd.AddJogo(jogo);
 				idJogo = jogo.getIdJogo();
 				bd.addJogoJogador(jogo.getIdJogo(), codigo);
@@ -353,7 +353,7 @@ public class Principal implements ActionListener{
   				String nome = txtNome.getText();
   	    		int codigo = Integer.parseInt(txtCodigo.getText());
   	    		try {
-					jogador = bd.getJogador(codigo);
+					jogador = bd.getJogador(codigo, nome);
 					List lista = bd.getIdJogos(jogador);
 					String[] array = (String[]) lista.toArray(new String[0]);
 					JComboBox cbListaJogos = new JComboBox(array);
@@ -634,6 +634,7 @@ public class Principal implements ActionListener{
  			jogo.getArrayValido();
  		}
  		jogo.testeOrdenado();
+ 		//jogo.iniciaTabuleiro();
  		for(int i = 0; i < tam; i++) {
 			   for(int j = 0; j < tam; j++) {
 				String texto = i+","+j;

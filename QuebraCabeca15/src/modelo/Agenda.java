@@ -22,8 +22,8 @@ public class Agenda {
 		return this.connection.setJogador(jogador);
 	}
 	
-	public Jogador getJogador(int idJogador) throws Exception {
-		return this.connection.getJogador(idJogador);
+	public Jogador getJogador(int idJogador, String nome) throws Exception {
+		return this.connection.getJogador(idJogador, nome);
 	}
 	
 	public Jogador updatePontos(int idJogador, double pontos) throws Exception {
