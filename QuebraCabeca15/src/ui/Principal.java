@@ -196,6 +196,22 @@ public class Principal implements ActionListener{
   btnSetRank.setBounds(87, 347, 117, 25);
   painelRank.add(btnSetRank);
   
+  final JButton btnZerarRank = new JButton("Zerar rank");
+  btnZerarRank.addActionListener(new ActionListener() {
+  	public void actionPerformed(ActionEvent arg0) {
+  		if(arg0.getSource() == btnZerarRank) {
+  			try {
+				bd.zerarRank();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+  		}
+  	}
+  });
+  btnZerarRank.setBounds(255, 347, 117, 25);
+  painelRank.add(btnZerarRank);
+  
  
   
   JLabel lbNome = new JLabel("Nome:");
@@ -306,46 +322,11 @@ public class Principal implements ActionListener{
 				iniciarCronometro();
 				
 				if(cbModoJogo.getSelectedIndex() == 1) {
-					jogo.getArrayInvalido();
-					jogo.iniciaTabuleiro();
-		    		for(int i = 0; i < tam; i++) {
-		   			   for(int j = 0; j < tam; j++) {
-		   				String texto = i+","+j;
-		   				int  num = jogo.tabuleiro[i][j];
-		   				tabuleiro[i][j].remove(imgs[i][j]);
-		   				 if(num != -1) {
-		   					String numImg = "Numeros/"+num+".png";
-		   			    	imgs[i][j] = new JLabel(new ImageIcon(numImg),JLabel.CENTER);
-		   				 }else {
-		   					 imgs[i][j] = new JLabel(new ImageIcon("Numeros/branco.png"),JLabel.CENTER);
-		   				 }
-		   				 tabuleiro[i][j].setText(String.valueOf(jogo.tabuleiro[i][j]));
-		   				 tabuleiro[i][j].add(imgs[i][j]);
-		   				 tabuleiro[i][j].setText(texto);
-		   			   }
-		   			  }
+					jogoParouImpar(cbModoJogo.getSelectedIndex());
 		    		btnJogo.setEnabled(true);
 		    		JOptionPane.showMessageDialog(cbModoJogo, "Jogo impar (IMPOSSIVEL)");
 				}else {
-					jogo.getArrayValido();
-					jogo.iniciaTabuleiro();
-		    		btnJogo.setEnabled(true);
-		    		for(int i = 0; i < tam; i++) {
-		   			   for(int j = 0; j < tam; j++) {
-		   				String texto = i+","+j;
-		   				int  num = jogo.tabuleiro[i][j];
-		   				tabuleiro[i][j].remove(imgs[i][j]);
-		   				 if(num != -1) {
-		   					String numImg = "Numeros/"+num+".png";
-		   			    	imgs[i][j] = new JLabel(new ImageIcon(numImg),JLabel.CENTER);
-		   				 }else {
-		   					 imgs[i][j] = new JLabel(new ImageIcon("Numeros/branco.png"),JLabel.CENTER);
-		   				 }
-		   				 tabuleiro[i][j].setText(String.valueOf(jogo.tabuleiro[i][j]));
-		   				 tabuleiro[i][j].add(imgs[i][j]);
-		   				 tabuleiro[i][j].setText(texto);
-		   			   }
-		   			  }
+					jogoParouImpar(cbModoJogo.getSelectedIndex());
 		    		btnJogo.setEnabled(true);
 		    		JOptionPane.showMessageDialog(cbModoJogo, "Jogo par");
 				}
@@ -451,25 +432,7 @@ public class Principal implements ActionListener{
   	public void actionPerformed(ActionEvent e) {
   		if(e.getSource() == btnPauseReset) {
   			jogo.reiniciaJogo();
-  			
-			iniciarCronometro();
-  			
-  			for(int i = 0; i < tam; i++) {
-  			   for(int j = 0; j < tam; j++) {
-  				String texto = i+","+j;
-  				int  num = jogo.tabuleiro[i][j];
-  				tabuleiro[i][j].remove(imgs[i][j]);
-  				 if(num != -1) {
-  					String numImg = "Numeros/"+num+".png";
-  			    	imgs[i][j] = new JLabel(new ImageIcon(numImg),JLabel.CENTER);
-  				 }else {
-  					 imgs[i][j] = new JLabel(new ImageIcon("Numeros/branco.png"),JLabel.CENTER);
-  				 }
-  				 tabuleiro[i][j].setText(String.valueOf(jogo.tabuleiro[i][j]));
-  				 tabuleiro[i][j].add(imgs[i][j]);
-  				 tabuleiro[i][j].setText(texto);
-  			   }
-  			  }
+			reiniciarTabuleiro();
   		}
   	}
   });
@@ -562,14 +525,26 @@ public class Principal implements ActionListener{
 	 }else {
 		 try {
 			bd.updatePontos(jogador.getIdJogador(),jogo.calculaPonos(iCount));
+			bd.deleteJogoJogador(idJogo);
+			bd.deleteJogo(idJogo);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		 tempoPassando = false;
 		 iCount = 0;
-		 
+		 tm.cancel();
+		 tm.purge();
 		 JOptionPane.showMessageDialog(frame, "VOCE VENCEU");
+		 reiniciarTabuleiro();
+		 try {
+			bd.AddJogo(jogo);
+			bd.addJogoJogador(idJogo, jogador.getIdJogador());
+			tempoPassando = true;
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		 
 	 }
 		
@@ -629,4 +604,51 @@ public class Principal implements ActionListener{
 		}, 1000, 1000); // 1000 = 1s
  	}
  	
+ 	public void reiniciarTabuleiro() {
+ 		jogo.reiniciaJogo();
+			
+		iniciarCronometro();
+			
+			for(int i = 0; i < tam; i++) {
+			   for(int j = 0; j < tam; j++) {
+				String texto = i+","+j;
+				int  num = jogo.tabuleiro[i][j];
+				tabuleiro[i][j].remove(imgs[i][j]);
+				 if(num != -1) {
+					String numImg = "Numeros/"+num+".png";
+			    	imgs[i][j] = new JLabel(new ImageIcon(numImg),JLabel.CENTER);
+				 }else {
+					 imgs[i][j] = new JLabel(new ImageIcon("Numeros/branco.png"),JLabel.CENTER);
+				 }
+				 tabuleiro[i][j].setText(String.valueOf(jogo.tabuleiro[i][j]));
+				 tabuleiro[i][j].add(imgs[i][j]);
+				 tabuleiro[i][j].setText(texto);
+			   }
+			  }
+ 	}
+ 	
+ 	public void jogoParouImpar(int parOuImpar) {
+ 		if(parOuImpar == 1) {
+ 			jogo.getArrayInvalido();
+ 		}else {
+ 			jogo.getArrayValido();
+ 		}
+ 		jogo.iniciaTabuleiro();
+ 		for(int i = 0; i < tam; i++) {
+			   for(int j = 0; j < tam; j++) {
+				String texto = i+","+j;
+				int  num = jogo.tabuleiro[i][j];
+				tabuleiro[i][j].remove(imgs[i][j]);
+				 if(num != -1) {
+					String numImg = "Numeros/"+num+".png";
+			    	imgs[i][j] = new JLabel(new ImageIcon(numImg),JLabel.CENTER);
+				 }else {
+					 imgs[i][j] = new JLabel(new ImageIcon("Numeros/branco.png"),JLabel.CENTER);
+				 }
+				 tabuleiro[i][j].setText(String.valueOf(jogo.tabuleiro[i][j]));
+				 tabuleiro[i][j].add(imgs[i][j]);
+				 tabuleiro[i][j].setText(texto);
+			   }
+			  }
+ 	}
 }

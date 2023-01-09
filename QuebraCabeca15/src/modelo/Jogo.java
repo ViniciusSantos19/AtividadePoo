@@ -147,14 +147,11 @@ public class Jogo implements Serializable{
 		double pontos = 0;
 		
 		if(tempo <= 60) {
-			pontos = 1000;
-			pontos += (50/30) * tempo;
+			pontos = 1000  + (50/3) * tempo;
 		}else if(tempo > 60 && tempo <= 5999) {
-			pontos = 100;
-			pontos += 6 * tempo;
+			pontos = 100 +  6 * tempo;
 		}else if(tempo >= 6000){
-			pontos = 10;
-			pontos += (1/600) * tempo;
+			pontos = 10 +  (1/600) * tempo;
 		}
 		
 		

@@ -152,33 +152,22 @@ public class DAOpostgres implements DAOjogo{
 		return lista;
 	}
 	
-	public static void main(String[] args) {
-		DAOpostgres test = new DAOpostgres();
-		Jogo jogo = new Jogo();
-		try {
-			jogo = test.getJogo(28);
-			System.out.println("//////");
-			System.out.println(jogo.getIdJogo());
-			for(int i = 0; i < 4; i++) {
-				for(int j = 0;  j < 4; j++) {
-					System.out.println(jogo.getTabuleiro()[i][j]);
-				}
-			}
-			jogo.reiniciaJogo();
-			//jogo.troca(0, 1, 2, 3);
-			test.UpdateJogo(jogo, 28);
-			System.out.println("//////");
-			System.out.println(jogo.getIdJogo());
-			for(int i = 0; i < 4; i++) {
-				for(int j = 0;  j < 4; j++) {
-					System.out.println(jogo.getTabuleiro()[i][j]);
-				}
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+	public void deleteJogo(int id) throws Exception {
+		String delete = "DELETE FROM JOGO WHERE JOGO.PK_JOGO ="+id;
+		Statement stmt = this.conn.getConnection().createStatement();
+		stmt.executeUpdate(delete);
+	}
+	
+	public void deleteJogoJogador(int idjogo)throws Exception {
+		String delete = "DELETE FROM JOGO_JOGADOR WHERE JOGO_JOGADOR.FK_JOGO ="+idjogo;
+		Statement stmt = this.conn.getConnection().createStatement();
+		stmt.executeUpdate(delete);
+	}
+	
+	public void zerarRank()throws Exception{
+		PreparedStatement ps = this.conn.getConnection().prepareStatement("UPDATE JOGADOR SET PONTOS = ? ");
+		ps.setDouble(1, 0);
+		ps.executeUpdate();
 	}
 
 }

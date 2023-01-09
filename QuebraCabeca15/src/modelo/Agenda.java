@@ -45,4 +45,16 @@ public class Agenda {
 	public List<Jogador> getRank() throws Exception{
 		return this.connection.getRank();
 	}
+	
+	public void deleteJogo(int id) throws Exception {
+		this.connection.deleteJogo(id);
+	}
+	
+	public void deleteJogoJogador(int id) throws Exception {
+		this.connection.deleteJogoJogador(id);
+	}
+	
+	public void zerarRank() throws Exception {
+		this.connection.zerarRank();
+	}
 }

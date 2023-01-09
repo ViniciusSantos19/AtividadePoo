@@ -8,6 +8,7 @@ CREATE TABLE JOGADOR(
 CREATE TABLE JOGO (
 	PK_JOGO SERIAL,
 	OBJETO BYTEA,
+	SEGUNDOS INT,
 	PRIMARY KEY (PK_JOGO)
 );
 
@@ -18,7 +19,4 @@ CREATE TABLE JOGO_JOGADOR(
 	FOREIGN KEY (FK_JOGADOR) REFERENCES JOGADOR(PK_JOGADOR)
 );
 
-select fk_jogo from jogo_jogador as jj inner join jogo as j on(j.pk_jogo = jj.fk_jogo)
-inner join jogador as ja on (ja.pk_jogador = jj.fk_jogador) where ja.pk_jogador =2;
 
-s

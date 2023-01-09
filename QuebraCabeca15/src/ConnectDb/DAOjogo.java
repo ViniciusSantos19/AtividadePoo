@@ -15,4 +15,7 @@ public interface DAOjogo {
 	public List<Jogador> getRank()throws Exception;
 	public void setJogo_Jogador(int pk_jogo, int pk_jogador)throws Exception;
 	public List<String> getIdJogoSalvo(Jogador jogador)throws Exception;
+	public void deleteJogo(int id)throws Exception;
+	public void deleteJogoJogador(int idjogo)throws Exception;
+	public void zerarRank()throws Exception;
 }
